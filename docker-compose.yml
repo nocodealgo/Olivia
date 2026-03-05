@@ -1,0 +1,64 @@
+services:
+  giorgio:
+    build: .
+    container_name: olivia
+    restart: unless-stopped
+
+    # ── Environment ──────────────────────────────────
+    env_file:
+      - .env
+
+    environment:
+      - NODE_ENV=production
+      - MEMORY_DB_PATH=/data/giorgio.db
+      - VAULT_PATH=/data/secrets.vault
+      - WEBHOOK_PORT=3100
+
+    # ── Ports ────────────────────────────────────────
+    ports:
+      - "${WEBHOOK_PORT:-3100}:3100"
+
+    # ── Persistent Volumes ───────────────────────────
+    volumes:
+      # Main data (database, vault, logs)
+      - olivia-data:/data
+      # WhatsApp session persistence
+      - olivia-wa:/app/wa-session
+      # Screenshots from browser tool
+      - olivia-screenshots:/app/screenshots
+      # Skills directory (mount from host for easy editing)
+      - ./skills:/app/skills:ro
+      # Plugins directory (mount from host)
+      - ./plugins:/app/plugins:ro
+
+    # ── Health Check ─────────────────────────────────
+    healthcheck:
+      test: [ "CMD", "node", "-e", "fetch('http://localhost:3100/health').then(r=>{if(!r.ok)throw 1}).catch(()=>process.exit(1))" ]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+    # ── Limits ───────────────────────────────────────
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "2.0"
+        reservations:
+          memory: 256M
+
+    # ── Logging ──────────────────────────────────────
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  olivia-data:
+    driver: local
+  olivia-wa:
+    driver: local
+  olivia-screenshots:
+    driver: local

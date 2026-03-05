@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "ElevenLabs": {
+            "command": "uvx",
+            "args": [
+                "elevenlabs-mcp"
+            ],
+            "env": {
+                "ELEVENLABS_API_KEY": "9105e32b08529d530471f65861d01387"
+            }
+        }
+    }
+}

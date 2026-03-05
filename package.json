@@ -1,0 +1,42 @@
+{
+  "name": "olivia",
+  "version": "1.0.0",
+  "description": "Giorgio — Personal AI agent. Lean, secure, fully understood.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "switch": "tsx scripts/switch.ts",
+    "switch:local": "tsx scripts/switch.ts local",
+    "switch:cloud": "tsx scripts/switch.ts cloud",
+    "switch:status": "tsx scripts/switch.ts status",
+    "deploy:worker": "npx wrangler deploy",
+    "deploy:docker": "docker compose up -d --build",
+    "vault": "tsx src/security/vault-cli.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@supabase/supabase-js": "^2.98.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "better-sqlite3": "^12.6.2",
+    "dotenv": "^16.4.7",
+    "googleapis": "^171.4.0",
+    "grammy": "^1.35.0",
+    "openai": "^6.25.0",
+    "playwright": "^1.58.2",
+    "qrcode-terminal": "^0.12.0",
+    "sqlite-vec": "^0.1.7-alpha.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260305.1",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.13.5",
+    "@types/qrcode-terminal": "^0.12.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "wrangler": "^4.70.0"
+  }
+}

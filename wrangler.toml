@@ -1,0 +1,40 @@
+# ── Giorgio — Cloudflare Workers Deployment ──────────
+# Docs: https://developers.cloudflare.com/workers/
+
+name = "olivia"
+main = "src/worker/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── Environment Variables (secrets via `wrangler secret put`) ──
+[vars]
+ENVIRONMENT = "production"
+MAX_TOOL_ITERATIONS = "10"
+TIMEZONE = "America/Mexico_City"
+
+# ── D1 Database (conversations + memory) ─────────────
+[[d1_databases]]
+binding = "DB"
+database_name = "olivia-db"
+database_id = "415fe366-4c2a-458f-894c-8f1111276158"
+
+# ── KV Namespaces (sessions, cache) ──────────────────
+[[kv_namespaces]]
+binding = "KV"
+id = "fccba3d9bb0549e58d350a0598dabdf2"
+
+# ── Durable Objects (agent state) ─────────────────────
+[durable_objects]
+bindings = [
+    { name = "AGENT", class_name = "AgentDurableObject" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AgentDurableObject"]
+
+
+# ── Triggers ─────────────────────────────────────────
+# Cron triggers for scheduled tasks (morning briefing, etc.)
+[triggers]
+crons = ["0 8 * * *"]  # 8am daily

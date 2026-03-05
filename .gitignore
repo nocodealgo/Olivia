@@ -1,0 +1,34 @@
+# ── Build & runtime ──────────────────────────────────
+node_modules/
+dist/
+*.db
+*.db-journal
+
+# ── Secrets ──────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+secrets.vault
+.gmail-token.json
+
+# ── WhatsApp session data ─────────────────────────────
+wa-session/
+
+# ── Screenshots from browser tool ─────────────────────
+screenshots/
+
+# ── Memory files ──────────────────────────────────────
+memory/
+
+# ── OS junk ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.db-shm
+*.db-wal
+.last-security-audit

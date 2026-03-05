@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{BOT_NAME}} Talk Mode</title>
+    <style>
+        :root {
+            --accent: #58a6ff;
+            --green: #3fb950;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: rgba(13, 17, 23, 0.92);
+            color: #e6edf3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            -webkit-app-region: drag;
+        }
+
+        .container {
+            text-align: center;
+            -webkit-app-region: no-drag;
+        }
+
+        .orb {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            margin: 0 auto 20px;
+            position: relative;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        .orb.listening {
+            background: radial-gradient(circle, var(--green) 0%, transparent 70%);
+            animation: breathe 1.5s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #8b949e;
+            margin-bottom: 24px;
+        }
+
+        .response {
+            max-width: 340px;
+            padding: 14px 18px;
+            margin: 16px auto;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+            display: none;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            width: 320px;
+            margin: 0 auto;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 20px;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            color: #e6edf3;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-row input:focus {
+            border-color: var(--accent);
+        }
+
+        .input-row button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-row button svg {
+            width: 16px;
+            height: 16px;
+            fill: #fff;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 18px;
+            -webkit-app-region: no-drag;
+        }
+
+        .close-btn:hover {
+            color: #e6edf3;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="close-btn" onclick="window.close()">✕</button>
+
+    <div class="container">
+        <div class="orb" id="orb"></div>
+        <h2>{{BOT_NAME}}</h2>
+        <p class="subtitle" id="subtitle">Talk Mode — type or speak</p>
+
+        <div class="response" id="response"></div>
+
+        <div class="input-row">
+            <input type="text" id="input" placeholder="Say something…" autocomplete="off"
+                onkeydown="if (event.key==='Enter') send()">
+            <button onclick="send()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const orb = document.getElementById('orb');
+        const resp = document.getElementById('response');
+        const input = document.getElementById('input');
+        const subtitle = document.getElementById('subtitle');
+
+        async function send() {
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            orb.classList.add('listening');
+            subtitle.textContent = 'Thinking…';
+            resp.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text }),
+                });
+                const data = await res.json();
+                resp.textContent = data.reply || 'No response';
+                resp.style.display = 'block';
+                subtitle.textContent = 'Talk Mode — type or speak';
+            } catch (err) {
+                resp.textContent = 'Error: ' + err.message;
+                resp.style.display = 'block';
+                subtitle.textContent = 'Connection error';
+            }
+            orb.classList.remove('listening');
+            input.focus();
+        }
+
+        input.focus();
+    </script>
+</body>
+
+</html>
