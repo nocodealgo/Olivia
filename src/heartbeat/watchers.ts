@@ -107,7 +107,7 @@ export async function watchSecurity(): Promise<string | null> {
 
     // 4. Database file sizes
     try {
-        const dbFiles = ["./giorgio.db", "./heartbeat.db"];
+        const dbFiles = ["./olivia.db", "./heartbeat.db"];
         for (const dbFile of dbFiles) {
             try {
                 const s = await stat(resolvePath(process.cwd(), dbFile));

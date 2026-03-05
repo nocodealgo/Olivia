@@ -91,7 +91,7 @@ export const config: Config = {
     elevenlabsVoiceId: process.env.ELEVENLABS_VOICE_ID ?? "JBFqnCBsd6RMkjVDRZzb",
     allowedUserIds: parseUserIds(requireEnv("ALLOWED_USER_IDS")),
     maxToolIterations: parseInt(process.env.MAX_TOOL_ITERATIONS ?? "10", 10),
-    memoryDbPath: process.env.MEMORY_DB_PATH ?? "./giorgio.db",
+    memoryDbPath: process.env.MEMORY_DB_PATH ?? "./olivia.db",
     ownerChatId: parseInt(process.env.OWNER_CHAT_ID ?? requireEnv("ALLOWED_USER_IDS").split(",")[0], 10),
     timezone: process.env.TZ ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     whatsappEnabled: process.env.WHATSAPP_ENABLED === "true",
